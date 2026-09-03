@@ -1,9 +1,9 @@
-# Geometric Circle — Build v1
+# STILLPOINT — Build v2
 
-A gesture-driven system where cursor speed controls a drawing's character: slow, sustained movement draws soft curves and circular nodes, while fast movement shatters the drawing into sharp geometric fragments. A dark vignette frames the piece throughout.
+v2 removes the geometric shatter behavior from v1 and tightens what remains into a single, clear state shift: slow, sustained cursor movement builds soft curling lines and circular nodes, while fast movement causes the drawing to dissolve quickly. One input, one rule, one atmosphere.
 
 ## Controls
-Move your cursor slowly across the canvas to draw soft curves. Move quickly to break the drawing into sharp geometric fragments.
+Move your cursor slowly to build a curling drawing. Move quickly to make it dissolve.
 
 ## Live version
-https://geometriccircle.netlify.app/
+[link goes here once deployed]
