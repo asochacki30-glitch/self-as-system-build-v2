@@ -36,11 +36,11 @@
     </div>
 
     <div class="panel">
-      <h3>End of Build Reflection</h3>
-      <p><strong>What can it do now that the tests couldn't?</strong> In the tests, each behavior lived in its own isolated canvas, reacting to its own separate input. Now the sigil holds two behaviors at once, driven by a single shared input — cursor speed — so the system reads as one coherent thing responding to one gesture, instead of four unrelated demos sitting next to each other.</p>
-      <p><strong>What feels most "you" about the behavior?</strong> The way it punishes fast, careless movement and only rewards patience feels the most deliberate. It doesn't respond evenly to any input — it has a clear preference for stillness and calm, and reacts sharply the moment that's broken.</p>
-      <p><strong>Where does it drift into generic or noisy?</strong> The jagged, spiky shape at high speed is the part that risks feeling generic — "shape gets messy when you move the mouse fast" is a fairly common effect, and right now it doesn't yet feel specific to this system versus any other reactive sketch.</p>
-      <p><strong>What will you change in v2?</strong> I want to replace the generic jitter/spike effect with something more specific to this system's identity — for example, the sigil breaking into a fixed number of pieces that scatter and have to reassemble during stillness, rather than just becoming visually noisy.</p>
+      <h3>End of Build Reflection (v2)</h3>
+      <p><strong>What changed from v1?</strong> The geometric shatter behavior is gone entirely. The system now has one rule instead of two: cursor speed controls whether the drawing is building (slow) or dissolving (fast), using the same fade mechanism that was already part of v1, just tuned to run much faster above the threshold.</p>
+      <p><strong>What became clearer once you tightened the system?</strong> With only one behavior left, the relationship between speed and outcome is much easier to read immediately — there's no longer a question of which of two effects is happening, just a single, continuous state.</p>
+      <p><strong>What did you remove, and why did that improve meaning?</strong> I removed the shard/shatter effect, which I had already identified as the noisiest, least controlled part of v1. Removing it forced the remaining curve rule to carry the whole piece, and made the "reward patience, punish carelessness" idea land more cleanly, since there's now only one outcome to lose, not a second competing spectacle.</p>
+      <p><strong>What will you attempt in v3?</strong> I want to take the optional creative reach and rebuild this one surviving rule — the curve that builds and dissolves — in Three.js, so the drawing exists in 3D space instead of on a flat canvas, without adding any new rules alongside it.</p>
     </div>
 
     <script src="script.js"></script>
