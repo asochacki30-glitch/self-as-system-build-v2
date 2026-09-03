@@ -16,10 +16,9 @@ canvas.addEventListener("mousemove", (event) => {
 
 let smoothedSpeed = 0;
 
-// Below this speed: draw a smooth curling curve
-// Above this speed: shatter into geometric fragments instead
-const slowThreshold = 3;
-const fastThreshold = 14;
+// One clean threshold — below it you're "building," at or above it
+// you're "dissolving." No more separate slow/fast range with a gap.
+const speedThreshold = 8;
 
 function drawVignette() {
   const gradient = ctx.createRadialGradient(
@@ -33,18 +32,21 @@ function drawVignette() {
 }
 
 function loop() {
-  // A very faint fade each frame — old marks linger and slowly
-  // soften, instead of the canvas fully clearing or drawing forever
-  ctx.fillStyle = "rgba(10, 14, 26, 0.02)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   const dx = currentMouseX - lastMouseX;
   const dy = currentMouseY - lastMouseY;
   const rawSpeed = Math.sqrt(dx * dx + dy * dy);
   smoothedSpeed += (rawSpeed - smoothedSpeed) * 0.2;
 
-  if (rawSpeed > 0.3 && rawSpeed < fastThreshold) {
-    // ---- Slow movement: a smooth curling curve, never straight ----
+  // The one state shift: below threshold, old marks fade very
+  // slowly (drawing builds up). At or above it, fade jumps way up,
+  // so the drawing dissolves quickly. Same fade mechanism as v1 —
+  // just doing more work now that the shatter rule is gone.
+  const fadeRate = smoothedSpeed < speedThreshold ? 0.02 : 0.35;
+  ctx.fillStyle = `rgba(10, 14, 26, ${fadeRate})`;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Only draw a new curve segment while below the threshold
+  if (rawSpeed > 0.3 && smoothedSpeed < speedThreshold) {
     const midX = (lastMouseX + currentMouseX) / 2;
     const midY = (lastMouseY + currentMouseY) / 2;
 
@@ -53,12 +55,9 @@ function loop() {
     ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(lastMouseX, lastMouseY);
-    // quadraticCurveTo bends the line through prevMouse as a control
-    // point, so it always comes out curved, never a straight segment
     ctx.quadraticCurveTo(prevMouseX, prevMouseY, midX, midY);
     ctx.stroke();
 
-    // Occasionally drop a small circle "node" along the path
     if (Math.random() < 0.12) {
       ctx.beginPath();
       ctx.strokeStyle = "rgba(150, 195, 255, 0.4)";
@@ -66,32 +65,6 @@ function loop() {
       ctx.arc(currentMouseX, currentMouseY, 4 + Math.random() * 12, 0, Math.PI * 2);
       ctx.stroke();
     }
-  } else if (rawSpeed >= fastThreshold) {
-    // ---- Fast movement: sharp geometric fragments ----
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
-    ctx.lineWidth = 1.5;
-
-    // A few short straight shards flying outward from the cursor
-    const shardCount = 3;
-    for (let i = 0; i < shardCount; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const len = 10 + Math.random() * 22;
-      const ex = currentMouseX + Math.cos(angle) * len;
-      const ey = currentMouseY + Math.sin(angle) * len;
-      ctx.beginPath();
-      ctx.moveTo(currentMouseX, currentMouseY);
-      ctx.lineTo(ex, ey);
-      ctx.stroke();
-    }
-
-    // A small angular triangle, like a fragment breaking off
-    const size = 8 + Math.random() * 12;
-    ctx.beginPath();
-    ctx.moveTo(currentMouseX, currentMouseY - size);
-    ctx.lineTo(currentMouseX + size, currentMouseY + size);
-    ctx.lineTo(currentMouseX - size, currentMouseY + size);
-    ctx.closePath();
-    ctx.stroke();
   }
 
   drawVignette();
