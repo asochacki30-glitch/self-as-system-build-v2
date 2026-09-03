@@ -6,4 +6,4 @@ v2 removes the geometric shatter behavior from v1 and tightens what remains into
 Move your cursor slowly to build a curling drawing. Move quickly to make it dissolve.
 
 ## Live version
-[link goes here once deployed]
+https://stillpointtt.netlify.app/
